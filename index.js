@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       const response = await fetch(apiUrl);
       if (!response.ok) {
-        throw new Error('Location not found');
+        throw new Error('Location Not Found');
       }
       const data = await response.json();
       displayWeatherData(data);
@@ -49,4 +49,5 @@ document.addEventListener('DOMContentLoaded', () => {
     weatherInput.value = '';
   }
 });
+
 
