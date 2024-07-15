@@ -18,12 +18,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     try {
       const response = await fetch(apiUrl);
+      console.log('API Response:', response); 
       if (!response.ok) {
         throw new Error('Location Not Found');
       }
       const data = await response.json();
+      console.log('Weather Data:', data); 
       displayWeatherData(data);
     } catch (error) {
+      console.error('Error:', error); 
       displayError(error.message);
     }
   }
@@ -36,18 +39,22 @@ document.addEventListener('DOMContentLoaded', () => {
       <img src="https://openweathermap.org/img/wn/${weather[0].icon}@2x.png" alt="${weather[0].description}">
       <p style="text-transform: capitalize;">${weather[0].description}</p><br>
       <p>Current: ${main.temp}° F</p>
-      <p>Feels like: ${main.feels_like}° F</p><br>
-      <p>Last updated: ${new Date(dt * 1000).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}</p>
+      <p>Feels like: ${main.feels_like}
+° F</p><br>
+      <p>Last updated: ${new Date(dt * 1000).toLocaleTimeString()}</p>
     `;
     weatherSection.innerHTML = weatherHTML;
+    weatherSection.style.display = 'block';
     weatherInput.value = '';
   }
 
   function displayError(message) {
-    const errorHTML = `<h2>${message}</h2>`;
+    const errorHTML = `<p class="error">${message}</p>`;
     weatherSection.innerHTML = errorHTML;
+    weatherSection.style.display = 'block';
     weatherInput.value = '';
   }
 });
+
 
 
