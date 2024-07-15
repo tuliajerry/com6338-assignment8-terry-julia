@@ -1,46 +1,43 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const weatherApp = document.getElementById('weather-app');
-  const weatherSection = document.getElementById('weather');
-  const weatherForm = weatherApp.querySelector('form');
-  const weatherInput = document.getElementById('weather-search');
+  const weatherForm = document.querySelector('form');
+  const weatherInput = document.querySelector('#weather-search');
+  const weatherSection = document.querySelector('#weather');
 
-  weatherForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const location = weatherInput.value.trim();
-    if (location) {
-      fetchWeatherData(location);
+  const apiKey = '0e0e21f3afcbca34775d8619ee15da31';
+
+  weatherForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const query = weatherInput.value.trim();
+    if (!query) return;
+
+    const weatherURL = `https://api.openweathermap.org/data/2.5/weather?q=${query}&units=imperial&appid=${apiKey}`;
+
+    try {
+      const response = await fetch(weatherURL);
+      if (!response.ok) {
+        throw new Error('Location not found');
+      }
+      const data = await response.json();
+      displayWeatherData(data);
+    } catch (error) {
+      displayError('Location not found');
     }
   });
 
-  async function fetchWeatherData(location) {
-    const apiKey = '0e0e21f3afcbca34775d8619ee15da31';
-    const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${location}&units=imperial&appid=${apiKey}`;
-
-    try {
-      const response = await fetch(apiUrl);
-      console.log('API Response:', response); 
-      if (!response.ok) {
-        throw new Error('Location Not Found');
-      }
-      const data = await response.json();
-      console.log('Weather Data:', data); 
-      displayWeatherData(data);
-    } catch (error) {
-      console.error('Error:', error); 
-      displayError(error.message);
-    }
-  }
-
   function displayWeatherData(data) {
     const { name, sys, weather, main, dt, coord } = data;
+    const { country } = sys;
+    const { description, icon } = weather[0];
+    const { temp, feels_like } = main;
+    const { lat, lon } = coord;
+
     const weatherHTML = `
-      <h2>${name}, ${sys.country}</h2>
-      <a href="https://www.google.com/maps/search/?api=1&query=${coord.lat},${coord.lon}" target="__BLANK">Click to view map</a>
-      <img src="https://openweathermap.org/img/wn/${weather[0].icon}@2x.png" alt="${weather[0].description}">
-      <p style="text-transform: capitalize;">${weather[0].description}</p><br>
-      <p>Current: ${main.temp}° F</p>
-      <p>Feels like: ${main.feels_like}
-° F</p><br>
+      <h2>${name}, ${country}</h2>
+      <a href="https://www.google.com/maps/search/?api=1&query=${lat},${lon}" target="_blank">Click to view map</a>
+      <img src="https://openweathermap.org/img/wn/${icon}@2x.png" alt="${description}">
+      <p style="text-transform: capitalize;">${description}</p><br>
+      <p>Current: ${temp.toFixed(2)}° F</p>
+      <p>Feels like: ${feels_like.toFixed(2)}° F</p><br>
       <p>Last updated: ${new Date(dt * 1000).toLocaleTimeString()}</p>
     `;
     weatherSection.innerHTML = weatherHTML;
