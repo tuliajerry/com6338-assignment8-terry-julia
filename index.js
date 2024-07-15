@@ -5,6 +5,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const apiKey = '0e0e21f3afcbca34775d8619ee15da31';
 
+ 
+  weatherSection.style.display = 'none';
+
   weatherForm.addEventListener('submit', async (event) => {
     event.preventDefault();
     const query = weatherInput.value.trim();
@@ -35,8 +38,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const { description, icon } = weather[0];
     const { temp, feels_like } = main;
     const { lat, lon } = coord;
-
-    console.log('Data to display:', { name, country, description, icon, temp, feels_like, lat, lon, dt });
 
     const weatherHTML = `
       <h2>${name}, ${country}</h2>
