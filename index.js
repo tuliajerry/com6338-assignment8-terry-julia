@@ -1,4 +1,4 @@
-const apiKey = '0e0e21f3afcbca34775d8619ee15da31';
+const apiKey = '0e0e21f3afcbca34775d8619ee15da31'; 
 
 async function fetchWeatherData(latitude, longitude) {
   const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=imperial&appid=${apiKey}`;
@@ -41,15 +41,15 @@ function updateWeatherInfo(weatherData) {
     <h2>${name}, ${country}</h2>
     <a href="${mapLink}" target="_blank">Click to view map</a>
     <img src="${weatherIconUrl}" alt="${description} icon">
-    <p style="text-transform: capitalize;">${description}</p><br>
+    <p>${description}</p>
     <p>Current: ${temp}° F</p>
-    <p>Feels like: ${feels_like}° F</p><br>
+    <p>Feels like: ${feels_like}° F</p>
     <p>Last updated: ${updatedTime}</p>
   `;
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  const weatherForm = document.getElementById('weather-form');
+  const weatherForm = document.querySelector('form');
   const inputField = document.querySelector('input[name="search"]');
 
   weatherForm.addEventListener('submit', async (event) => {
@@ -59,9 +59,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!location) return;
 
     try {
-  
-      const coordinates = await fetchCoordinates(location);
-      const { latitude, longitude } = coordinates;
+     
+      const latitude = 
+      const longitude = 
 
       const weatherData = await fetchWeatherData(latitude, longitude);
       updateWeatherInfo(weatherData);
@@ -74,27 +74,6 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-async function fetchCoordinates(location) {
-  const geocodeUrl = `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${apiKey}`;
-
-  try {
-    const response = await fetch(geocodeUrl);
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-
-    const data = await response.json();
-    const { coord } = data;
-    if (!coord) {
-      throw new Error(`Coordinates not found for location: ${location}`);
-    }
-
-    return coord;
-  } catch (error) {
-    console.error('Error fetching coordinates:', error);
-    throw error;
-  }
-}
 
 
 
